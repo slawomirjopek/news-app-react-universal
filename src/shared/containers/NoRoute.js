@@ -1,4 +1,4 @@
-import Ract from "react";
+import React from "react";
 
 const NoRoute = () => (
     <p>Error 404: Page not found!</p>

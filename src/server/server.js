@@ -11,8 +11,10 @@ app.use(Express.static("public"));
 /* get all requests */
 app.get("*", (req, res) => {
     let status = 200;
+    const context = {};
+
     const markup = renderToString(
-        <Router>
+        <Router location={req.url} context={context}>
             <App/>
         </Router>
     );
