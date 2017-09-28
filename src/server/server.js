@@ -1,15 +1,23 @@
 import Express from "express";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { StaticRouter as Router } from "react-router-dom";
+import { StaticRouter as Router, matchPath } from "react-router-dom";
 import App from "../shared/App";
+import fs from "fs";
+import path from "path";
 
 const app = new Express();
 /* server settings & middlewares */
 app.use(Express.static("public"));
 
-/* get all requests */
-app.get("*", (req, res) => {
+/* data api */
+app.get("/api/news", (req, res) => {
+    const data = getApiData("news");
+    res.json(data);
+});
+
+/* get all requests without /api/ */
+app.get(/^((?!\/api\/)[\s\S])*$/, (req, res) => {
     let status = 200;
     const context = {};
 
@@ -39,3 +47,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`========== | Server stared on port: ${port} | ==========`);
 });
+
+const getApiData = (endpoint) => {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, `api/${endpoint}.json`), "utf8"));
+};

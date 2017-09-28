@@ -38,6 +38,9 @@ const serverConfig = {
             }
         ]
     },
+    node: {
+        __dirname: true
+    },
     externals: nodeExternals()
 };
 

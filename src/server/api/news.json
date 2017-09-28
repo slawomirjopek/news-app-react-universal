@@ -1,0 +1,12 @@
+[
+    {
+        "id": "1",
+        "title": "News title one",
+        "author": "John"
+    },
+    {
+        "id": "2",
+        "title": "News title rwo",
+        "author": "Ann"
+    }
+]
