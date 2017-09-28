@@ -1,0 +1,38 @@
+{
+  "name": "news-app-react-universal",
+  "version": "1.0.0",
+  "description": "React universal app (node.js + express)",
+  "main": "index.js",
+  "scripts": {
+    "build-dev": "webpack",
+    "clean": "rimraf dist",
+    "start-dev": "npm run build-dev && nodemon public/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slawomirjopek/news-app-react-universal.git"
+  },
+  "keywords": [
+    "react",
+    "react-universal"
+  ],
+  "author": "Sławomir Jopek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slawomirjopek/news-app-react-universal/issues"
+  },
+  "homepage": "https://github.com/slawomirjopek/news-app-react-universal#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "express": "^4.15.5",
+    "nodemon": "^1.12.1",
+    "webpack": "^3.6.0"
+  },
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  }
+}
