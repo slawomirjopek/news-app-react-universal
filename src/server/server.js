@@ -1,6 +1,7 @@
 import Express from "express";
 import React from "react";
 import { renderToString } from "react-dom/server";
+import { StaticRouter as Router } from "react-router-dom";
 import App from "../shared/App";
 
 const app = new Express();
@@ -10,7 +11,11 @@ app.use(Express.static("public"));
 /* get all requests */
 app.get("*", (req, res) => {
     let status = 200;
-    const markup = renderToString(<App/>);
+    const markup = renderToString(
+        <Router>
+            <App/>
+        </Router>
+    );
 
     res.status(status).send(`
         <!DOCTYPE html>
