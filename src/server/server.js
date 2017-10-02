@@ -12,8 +12,7 @@ app.use(Express.static("public"));
 
 /* data api */
 app.get("/api/news", (req, res) => {
-    const data = getApiData("news");
-    res.json(data);
+    res.json(getApiData("news"));
 });
 
 /* get all requests without /api/ */

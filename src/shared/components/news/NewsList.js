@@ -1,11 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 
-class NewsList extends Component {
-    render() {
-        return (
-            <div>NewsList</div>
-        )
-    }
-}
+const NewsList = (props) => {
+    return (
+        <div>
+            {props.news.map((news, index) => {
+                return <article key={index}>
+                    <h3>{news.title}</h3>
+                    <p>{news.author}</p>
+                </article>
+            })}
+        </div>
+    )
+};
 
 export default NewsList;
