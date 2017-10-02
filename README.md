@@ -14,10 +14,10 @@ npm i
 
 - only build
 ```
-npm run build-dev
+npm run build:dev
 ```
 
 - build & run server
 ```
-npm run start-dev
+npm run start:dev
 ```
