@@ -3,21 +3,30 @@ import NewsList from "../components/news/NewsList";
 import axios from "axios";
 
 class News extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+
+        let initialData;
+
+        if (typeof window === "undefined") {
+            initialData = props.staticContext.data || []
+        } else {
+            initialData = window.__initialState__ || [];
+            delete window.__initialState__;
+        }
 
         this.state = {
-            news: []
+            news: initialData
         }
     }
 
     componentDidMount() {
-        this.getInitialData().then((data) => {
+        News.getInitialData().then((data) => {
             this.setState({ news: data });
         });
     }
 
-    getInitialData() {
+    static getInitialData() {
         return axios.get("http://localhost:3000/api/news")
             .then((res) => res.data)
             .catch((err) => {
