@@ -7,7 +7,6 @@ const App = () => {
     return (
         <Switch>
             {routes.map((route, index) => <Route key={index} {...route}/>)}
-            <Route component={NoRoute}/>
         </Switch>
     );
 };

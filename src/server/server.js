@@ -14,11 +14,15 @@ app.use(Express.static("public"));
 
 /* data api */
 app.get("/api/news", (req, res) => {
-    res.json(getAllNews());
+    getAllNews().then((data) => {
+        res.json(data);
+    });
 });
 
 app.get("/api/news/:id", (req, res) => {
-    res.json(getSingleNews(req.params.id));
+    getSingleNews(req.params.id).then((data) => {
+        res.json(data);
+    });
 });
 
 /* get all requests without /api/ */
@@ -47,7 +51,7 @@ app.get(/^((?!\/api\/)[\s\S])*$/, (req, res) => {
                 <body>
                     <div id="app">${markup}</div>
                     <script>window.__initialState__ = ${serialize(data)}</script>
-                    <script src="bundle.js"></script>
+                    <script src="/bundle.js"></script>
                 </body>
             </html>
         `);
@@ -62,11 +66,15 @@ app.listen(port, () => {
 });
 
 const getData = (endpoint) => {
-    return fs.readFileSync(path.join(__dirname, `api/${endpoint}.json`), "utf8");
+    return new Promise((resolve) => {
+        fs.readFile(path.join(__dirname, `api/${endpoint}.json`), "utf8", function(err, data) {
+            resolve(JSON.parse(data))
+        });
+    });
 };
 
-const getAllNews = () => JSON.parse(getData("news"));
+const getAllNews = () => getData("news");
 
 const getSingleNews = (id) => {
-    return JSON.parse(getData("news")).find((news) => news.id == id ? news : null)
+    return getData("news").then((data) => data.find((news) => news.id == id ? news : null))
 };

@@ -9,16 +9,18 @@ class SingleNews extends Component {
         super(props);
 
         newsId = props.match.params.id;
-        let initialData = {};
-        //
-        // if (typeof window === "undefined") {
-        //     initialData = props.staticContext.data || []
-        // } else {
-        //     initialData = window.__initialState__ || [];
-        //     delete window.__initialState__;
-        // }
-        //
-        this.state = initialData;
+        let initialData;
+
+        if (typeof window === "undefined") {
+            initialData = props.staticContext.data
+        } else {
+            if (window.__initialState__) {
+                initialData = window.__initialState__;
+                delete window.__initialState__;
+            }
+        }
+
+        this.state = initialData || {};
     }
 
     render() {

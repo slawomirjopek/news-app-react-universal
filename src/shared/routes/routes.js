@@ -1,4 +1,5 @@
 import News from "../containers/News";
+import NoRoute from "../containers/NoRoute";
 import SingleNews from "../components/news/SingleNews";
 
 export default [
@@ -10,6 +11,11 @@ export default [
     {
         path: "/news/:id",
         component: SingleNews,
+        exact: false
+    },
+    {
+        path: "*",
+        component: NoRoute,
         exact: false
     }
 ];

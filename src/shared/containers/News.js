@@ -9,21 +9,25 @@ class News extends Component {
         let initialData;
 
         if (typeof window === "undefined") {
-            initialData = props.staticContext.data || []
+            initialData = props.staticContext.data
         } else {
-            initialData = window.__initialState__ || [];
-            delete window.__initialState__;
+            if (window.__initialState__) {
+                initialData = window.__initialState__;
+                delete window.__initialState__;
+            }
         }
 
         this.state = {
-            news: initialData
+            news: initialData || []
         }
     }
 
     componentDidMount() {
-        News.getInitialData().then((data) => {
-            this.setState({ news: data });
-        });
+        if (!this.state.news.length) {
+            News.getInitialData().then((data) => {
+                this.setState({ news: data });
+            });
+        }
     }
 
     static getInitialData() {
