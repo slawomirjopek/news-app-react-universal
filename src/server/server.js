@@ -7,6 +7,8 @@ import routes from "../shared/routes/routes";
 import fs from "fs";
 import path from "path";
 import serialize from "serialize-javascript";
+import { Provider } from "react-redux";
+import configureStore from "../shared/redux/store";
 
 const app = new Express();
 /* server settings & middlewares */
@@ -21,7 +23,7 @@ app.get("/api/news", (req, res) => {
 
 app.get("/api/news/:id", (req, res) => {
     getSingleNews(req.params.id).then((data) => {
-        res.json(data);
+        res.json([data]);
     });
 });
 
@@ -30,17 +32,25 @@ app.get(/^((?!\/api\/)[\s\S])*$/, (req, res) => {
     let status = 200;
     let context = {};
 
-    const currentRoute = routes.find((route) => matchPath(req.url, route));
-    const initialData = currentRoute.component.getInitialData && currentRoute.component.getInitialData();
+    const store = configureStore();
 
-    Promise.resolve(initialData).then((data) => {
-        context = { data };
+    const promises = routes.reduce((acc, route) => {
+        if (matchPath(req.url, route) && route.component && route.component.getInitialData) {
+            acc.push(Promise.resolve(store.dispatch(route.component.getInitialData())));
+        }
+        return acc;
+    }, []);
 
+    Promise.all(promises).then(() => {
         const markup = renderToString(
-            <Router location={req.url} context={context}>
-                <App/>
-            </Router>
+            <Provider store={store}>
+                <Router location={req.url} context={context}>
+                    <App/>
+                </Router>
+            </Provider>
         );
+
+        const data = store.getState();
 
         res.status(status).send(`
             <!DOCTYPE html>
@@ -50,7 +60,9 @@ app.get(/^((?!\/api\/)[\s\S])*$/, (req, res) => {
                 </head>
                 <body>
                     <div id="app">${markup}</div>
-                    <script>window.__initialState__ = ${serialize(data)}</script>
+                    <script>
+                        window.__initialData__ = ${serialize(data)};
+                    </script>
                     <script src="/bundle.js"></script>
                 </body>
             </html>

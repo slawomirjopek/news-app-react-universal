@@ -1,51 +1,41 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { connect } from "react-redux";
+import { fetchSingleNews } from "../../../shared/redux/reducers";
 
-let newsId;
+let id;
 
 class SingleNews extends Component {
     constructor(props) {
-        super(props);
+        super();
+        id = props.match.params.id
+    }
 
-        newsId = props.match.params.id;
-        let initialData;
+    componentDidMount() {
+        this.props.dispatch(SingleNews.getInitialData());
+    }
 
-        if (typeof window === "undefined") {
-            initialData = props.staticContext.data
-        } else {
-            if (window.__initialState__) {
-                initialData = window.__initialState__;
-                delete window.__initialState__;
-            }
-        }
-
-        this.state = initialData || {};
+    static getInitialData() {
+        return fetchSingleNews(id);
     }
 
     render() {
         return (
             <div>
-                <h2>{ this.state.title }</h2>
-                <p>{ this.state.author }</p>
+                <h2>{ this.props.news.title }</h2>
+                <p>{ this.props.news.author }</p>
                 <Link to="/">Back</Link>
             </div>
         )
     }
+};
 
-    componentDidMount() {
-        SingleNews.getInitialData().then((data) => {
-            this.setState({ id: data.id, title: data.title, author: data.author });
-        });
-    }
-
-    static getInitialData() {
-        return axios.get("http://localhost:3000/api/news/" + newsId)
-            .then((res) => res.data)
-            .catch((err) => {
-                console.log(err)
-            })
+const mapStateToProps = (state) => {
+    return {
+        news: state.news[0],
+        fetching: state.fetching,
+        error: state.error
     }
 };
 
-export default SingleNews;
+export default connect(mapStateToProps)(SingleNews);

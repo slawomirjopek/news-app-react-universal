@@ -1,51 +1,33 @@
 import React, { Component } from "react";
 import NewsList from "../components/news/NewsList";
-import axios from "axios";
+import { connect } from "react-redux";
+import { fetchNews } from "../../shared/redux/reducers";
 
 class News extends Component {
-    constructor(props) {
-        super(props);
-
-        let initialData;
-
-        if (typeof window === "undefined") {
-            initialData = props.staticContext.data
-        } else {
-            if (window.__initialState__) {
-                initialData = window.__initialState__;
-                delete window.__initialState__;
-            }
-        }
-
-        this.state = {
-            news: initialData || []
-        }
-    }
-
     componentDidMount() {
-        if (!this.state.news.length) {
-            News.getInitialData().then((data) => {
-                this.setState({ news: data });
-            });
-        }
+        this.props.dispatch(News.getInitialData());
     }
 
     static getInitialData() {
-        return axios.get("http://localhost:3000/api/news")
-            .then((res) => res.data)
-            .catch((err) => {
-                console.log(err)
-            })
+        return fetchNews();
     }
 
     render() {
         return (
             <div>
                 <h1>News</h1>
-                <NewsList news={this.state.news}/>
+                <NewsList news={this.props.news}/>
             </div>
         )
     }
 }
 
-export default News;
+const mapStateToProps = (state) => {
+    return {
+        news: state.news,
+        fetching: state.fetching,
+        error: state.error
+    }
+};
+
+export default connect(mapStateToProps)(News);
