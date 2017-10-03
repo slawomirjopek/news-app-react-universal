@@ -6,7 +6,8 @@
   "scripts": {
     "build:dev": "webpack",
     "clean": "rimraf public",
-    "start:dev": "npm run build:dev && nodemon public/server.js"
+    "start:dev": "npm run build:dev && nodemon public/server.js",
+    "watch": "webpack -w"
   },
   "repository": {
     "type": "git",

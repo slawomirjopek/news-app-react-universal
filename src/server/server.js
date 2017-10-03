@@ -14,7 +14,11 @@ app.use(Express.static("public"));
 
 /* data api */
 app.get("/api/news", (req, res) => {
-    res.json(getApiData("news"));
+    res.json(getAllNews());
+});
+
+app.get("/api/news/:id", (req, res) => {
+    res.json(getSingleNews(req.params.id));
 });
 
 /* get all requests without /api/ */
@@ -57,6 +61,12 @@ app.listen(port, () => {
     console.log(`========== | Server stared on port: ${port} | ==========`);
 });
 
-const getApiData = (endpoint) => {
-    return JSON.parse(fs.readFileSync(path.join(__dirname, `api/${endpoint}.json`), "utf8"));
+const getData = (endpoint) => {
+    return fs.readFileSync(path.join(__dirname, `api/${endpoint}.json`), "utf8");
+};
+
+const getAllNews = () => JSON.parse(getData("news"));
+
+const getSingleNews = (id) => {
+    return JSON.parse(getData("news")).find((news) => news.id == id ? news : null)
 };

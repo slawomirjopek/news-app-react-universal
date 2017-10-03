@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const NewsList = (props) => {
     return (
@@ -7,6 +8,7 @@ const NewsList = (props) => {
                 return <article key={index}>
                     <h3>{news.title}</h3>
                     <p>{news.author}</p>
+                    <Link to={`/news/${news.id}`} news={news}>Read more...</Link>
                 </article>
             })}
         </div>
